@@ -97,7 +97,7 @@ def asistente_virtual():
 
                     # -------------------------------------- Hola Mundo! -------------------------------------- #
                        elif any(palabra in comando for palabra in comando comando_holamundo) : 
-                        hortalizas = ^[ " patata " , lechuga"] 
+                        hortalizas = [ " patata " , lechuga"] 
                         aleatorio = random.choice(hortalizas)
                         engine.say (f" aleaotorio")
                         engine.runAndWait ()
