@@ -19,6 +19,8 @@ def asistente_virtual():
 
     comando_dado = ["tira un dado", "lanza un dado"]
 
+    comando_holamundo = ["hola mundo" , "dime holamundo"]
+
     # Inicializar el reconocimiento de voz
     r = sr.Recognizer()
     
@@ -91,7 +93,14 @@ def asistente_virtual():
                     numeros = ["1", "2", "3", "4", "5"]
                     dado = random.choice(numeros)
                     engine.say(f'He lanzado el dado y el numero que ha salido es {dado}')
-                    engine.runAndWait()
+                    engine.runAndWait() 
+
+                    # -------------------------------------- Hola Mundo! -------------------------------------- #
+                       elif any(palabra in comando for palabra in comando comando_holamundo) : 
+                        hortalizas = ^[ " patata " , lechuga"] 
+                        aleatorio = random.choice(hortalizas)
+                        engine.say (f" aleaotorio")
+                        engine.runAndWait ()
 
             # -------------------------------------- ERRORES -------------------------------------- #
 
@@ -108,4 +117,5 @@ def asistente_virtual():
             # -------------------------------------- ##### -------------------------------------- #
 
 # Ejecutar el asistente virtual
-asistente_virtual()
+asistente_virtual() 
+
