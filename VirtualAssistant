@@ -65,15 +65,6 @@ def asistente_virtual():
                     engine.say("La hora actual es " + hora)
                     engine.runAndWait()
 
-            # -------------------------------------- ENCENDER BOT AMINO -------------------------------------- #
-
-                elif any(palabra in comando for palabra in comando_directo):
-                    os.startfile(['C:/Program Files/obs-studio/bin/64bit/obs64.exe'])
-                    os.startfile(['C:/Users/jmgam/Desktop/SAMMI/SAMMI Core.exe'])
-                    os.startfile(['C:/Program Files (x86)/Steam/steamapps/common/Stream Avatars/StreamAvatars.exe'])
-                    engine.say("ejecutado.")
-                    engine.runAndWait()
-
             # -------------------------------------- LEER TEXTO -------------------------------------- #
 
                 elif any(palabra in comando for palabra in comando_texto):
