@@ -6,6 +6,9 @@ import pyttsx3
 import os
 import re
 import random
+import Config
+import sqlite3
+import webbrowser
 
             # -------------------------------------- ASISTENTE VIRTUAL -------------------------------------- #
 
@@ -20,6 +23,12 @@ def asistente_virtual():
     comando_dado = ["tira un dado", "lanza un dado"]
 
     comando_holamundo = ["hola mundo" , "dime holamundo"]
+
+    comando_db = ["Que hay en la base de datos", "que hay en la base de datos", "dime la base de datos"]
+
+    comando_buscar = ["busca"]
+
+    comando_web = ["busca en Google", "busca en google"]
 
     # Inicializar el reconocimiento de voz
     r = sr.Recognizer()
@@ -95,12 +104,36 @@ def asistente_virtual():
                     engine.say(f'He lanzado el dado y el numero que ha salido es {dado}')
                     engine.runAndWait() 
 
-                    # -------------------------------------- Hola Mundo! -------------------------------------- #
-                       elif any(palabra in comando for palabra in comando comando_holamundo) : 
-                        hortalizas = [ " patata " , lechuga"] 
-                        aleatorio = random.choice(hortalizas)
-                        engine.say (f" aleaotorio")
-                        engine.runAndWait ()
+            # -------------------------------------- Hola Mundo! -------------------------------------- #
+            
+                elif any(palabra in comando for palabra in comando_holamundo):
+                    hortalizas = [ " patata " , "lechuga"] 
+                    aleatorio = random.choice(hortalizas)
+                    engine.say (f" aleaotorio")
+                    engine.runAndWait ()
+
+            # -------------------------------------- BASE DE DATOS -------------------------------------- #
+
+                elif any(palabra in comando for palabra in comando_db):
+                    conn = sqlite3.connect(Config.DB)
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT * FROM users")
+                    resultados = cursor.fetchall()
+                    datos = []
+                    for resultado in resultados:
+                        datos.append(str(resultado))
+                    for dato in datos:
+                        engine.say(f"En la base de datos hay: {dato}")
+                        engine.runAndWait()
+                    conn.close()
+
+            # -------------------------------------- BUSCAR EN WEB -------------------------------------- #
+
+                elif any(palabra in comando for palabra in comando_web): #"busca en Google" in comando:
+                    # Utilizar el reconocimiento de voz para obtener la palabra o frase a buscar
+                    palabra_busqueda = r.recognize_google(audio, language='es-ES')
+                    # Utilizar la palabra o frase como argumento para la función de búsqueda de Google
+                    webbrowser.open(f"https://www.google.com/search?q={palabra_busqueda}")
 
             # -------------------------------------- ERRORES -------------------------------------- #
 
