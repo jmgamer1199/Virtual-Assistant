@@ -78,7 +78,11 @@ def asistente_virtual():
 
     comando_reproducirmusica = ["reanuda la musica", "reanuda la música", "reproduce la música"]
 
-    comando_holamundo = ["patatas"]
+    comando_holamundo = ["patatas2"]
+
+    comando_siguientemusica = ["siguiente musica", "pasa la musica", "pasa la siguiente música", "siguiente música"]
+
+    comando_anteriormusica = ["patatas"]
 
     # Inicializar el reconocimiento de voz
     r = sr.Recognizer()
@@ -300,6 +304,26 @@ def asistente_virtual():
                                                                     scope=["user-library-read", "user-library-modify", "playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "user-read-playback-state", "user-read-currently-playing", "app-remote-control", "user-modify-playback-state"]))
 
                     sp.start_playback()
+
+            # -------------------------------------- SIGUIENTE MUSICA DE SPOTIFY -------------------------------------- # 
+
+                elif any(palabra in comando for palabra in comando_siguientemusica):
+                    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=Config.SPOTI_ID,
+                                                                    client_secret=Config.SPOTI_SECRET,
+                                                                    redirect_uri=Config.URI,
+                                                                    scope=["user-library-read", "user-library-modify", "playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "user-read-playback-state", "user-read-currently-playing", "app-remote-control", "user-modify-playback-state"]))
+
+                    sp.next_track()
+
+            # -------------------------------------- MUSICA ANTERIOR DE SPOTIFY -------------------------------------- # 
+
+                elif any(palabra in comando for palabra in comando_anteriormusica):
+                    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=Config.SPOTI_ID,
+                                                                    client_secret=Config.SPOTI_SECRET,
+                                                                    redirect_uri=Config.URI,
+                                                                    scope=["user-library-read", "user-library-modify", "playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "user-read-playback-state", "user-read-currently-playing", "app-remote-control", "user-modify-playback-state"]))
+
+                    sp.previous_track()
 
             # -------------------------------------- BUSCAR EN WEB -------------------------------------- #
 
