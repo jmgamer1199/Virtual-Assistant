@@ -444,8 +444,8 @@ def asistente_virtual():
 
                 elif any(palabra in comando for palabra in comando_abrirapp):
                     programs = {
-                        'OBS': r"C:\Program Files\obs-studio\bin\64bit\obs64.exe",
-                        'disc': r"C:\Users\jmgam\AppData\Local\Discord\app-1.0.9011\Discord.exe"
+                        'OBS': r"RUTA",
+                        'disc': r"RUTA"
                     }
                     r = sr.Microphone()
 
@@ -476,7 +476,7 @@ def asistente_virtual():
                         engine.runAndWait()
                         contact = recognizer.listen(source)
                         contact = contact.strip()
-                        
+
                     if contact in contacts:
                         for cont in contacts:
                             if cont == contact:
