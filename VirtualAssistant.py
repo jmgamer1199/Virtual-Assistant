@@ -9,15 +9,20 @@ import re
 import random
 import Config
 import sqlite3
+import Whatsapp as whapp
 import webbrowser
 import math
 import spotipy
 import spotipy.util as util
 import openai
+import serial
 import datetime
 import openpyxl
 import pandas as pd
 from spotipy.oauth2 import SpotifyOAuth
+
+ser = serial.Serial('COM3', 9600)
+
             # -------------------------------------- ASISTENTE VIRTUAL -------------------------------------- #
 
 def asistente_virtual():
@@ -83,6 +88,29 @@ def asistente_virtual():
     comando_siguientemusica = ["siguiente musica", "pasa la musica", "pasa la siguiente música", "siguiente música"]
 
     comando_anteriormusica = ["patatas"]
+
+    comando_apagarled = ["apaga el led", "apagar led", "apagar el led", "apaga led", "apaga el led", "apaga el LED", "apaga LED", "apagar el LED", "apagar LED"]
+
+    comando_abrirapp = ["abre la aplicación", "abre una aplicación", "abre alguna aplicación"]
+    
+    comando_enviarmensajewhats = ["envia un mensaje por whatsapp", "envía un mensaje por whatsapp"]
+
+    comando_abriragregarcontacto = ["quiero agregar un contacto", "agregar contacto", "quiero añadir un contacto", "añade un contacto"]
+
+    def charge_data(name_dict, name_file):
+        try:
+            with open(name_file) as f:
+                for line in f:
+                    (key, val) = line.split(",")
+                    val = val.rstrip("\n")
+                    name_dict[key] = val
+        except FileExistsError as e:
+            pass
+
+    def serial_led(val):
+        data = str(val).encode()
+        ser.write(data)
+
 
     # Inicializar el reconocimiento de voz
     r = sr.Recognizer()
@@ -390,12 +418,12 @@ def asistente_virtual():
                 elif any(palabra in comando for palabra in comando_abrirtendenciastwitter):
                     webbrowser.open(f"https://twitter.com/explore/tabs/trending")
 
-            # -------------------------------------- RESPONDE PREGUNTAS CON OPENAI -------------------------------------- # 
+            # -------------------------------------- ABRIR ARCHIVO .BAT -------------------------------------- # 
 
                 elif any(palabra in comando for palabra in comando_haz_una_pregunta):
                     subprocess.call("start close_cmdAmino.bat", shell=True)
 
-            # -------------------------------------- DICE LA FECHA ACTUAL -------------------------------------- # 
+            # -------------------------------------- DICE LA FECHA ACTUAL NO FUNCIONA-------------------------------------- # 
 
                 elif any(palabra in comando for palabra in comando_fecha):
                     fecha_actual = datetime.datetime.now()
@@ -404,6 +432,71 @@ def asistente_virtual():
 
                     engine.say(fecha_formateada)
                     engine.runAndWait()
+
+            # -------------------------------------- APAGAR LED ARDUINO -------------------------------------- # 
+
+                elif any(palabra in comando for palabra in comando_apagarled):
+                    engine.say("Apagando el led")
+                    engine.runAndWait
+                    serial_led(0)
+
+            # -------------------------------------- ABRE APPS NO FUNCIONA -------------------------------------- # 
+
+                elif any(palabra in comando for palabra in comando_abrirapp):
+                    programs = {
+                        'OBS': r"C:\Program Files\obs-studio\bin\64bit\obs64.exe",
+                        'disc': r"C:\Users\jmgam\AppData\Local\Discord\app-1.0.9011\Discord.exe"
+                    }
+                    r = sr.Microphone()
+
+                    with sr.Microphone() as source:
+                        engine.say("Que aplicacion quieres abrir")
+                        engine.runAndWait()
+                        audio = r.listen(source)
+
+
+                    try:
+                        app = r.recognize_google(audio)
+                        if app in programs:
+                            engine.say("Abriendo" +app)
+                            engine.runAndWait()
+
+                    except:
+                        print()
+
+            # -------------------------------------- ENVIAR MENSAJE POR WHATS -------------------------------------- # 
+
+                elif any(palabra in comando for palabra in comando_enviarmensajewhats):
+                    recognizer = sr.Recognizer()
+                    microphone = sr.Microphone()
+                        
+                    with microphone as source:
+                        recognizer.adjust_for_ambient_noise(source)
+                        engine.say("A que contacto quieres enviar el mensaje?")
+                        engine.runAndWait()
+                        contact = recognizer.listen(source)
+                        contact = contact.strip()
+                        
+                    if contact in contacts:
+                        for cont in contacts:
+                            if cont == contact:
+                                contact = contacts[cont]
+                                engine.say("que mensaje le envio?")
+                                message = recognizer.listen(source)
+                                engine.say("Se esta enviando el mensaje")
+                                whapp.send_message(contact, message)
+                    else:
+                        engine.say(f"El contact {contact} no existe")
+                        print(f"El contact {contact} no existe")
+
+                        engine = pyttsx3.init()
+                        engine.setProperty('rate', 120)
+
+            # -------------------------------------- ABRIR VENTANA AGREGAR CONTACTO -------------------------------------- # 
+
+                elif any(palabra in comando for palabra in comando_abriragregarcontacto):
+                    subprocess.call("start cmdAgregarContacto.bat", shell=True)
+
 
             # -------------------------------------- ERRORES -------------------------------------- #
 

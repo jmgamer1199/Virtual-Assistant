@@ -1,0 +1,2 @@
+@py.exe RUTA %*
+@pause
