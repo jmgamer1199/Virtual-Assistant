@@ -443,26 +443,29 @@ def asistente_virtual():
             # -------------------------------------- ABRE APPS NO FUNCIONA -------------------------------------- # 
 
                 elif any(palabra in comando for palabra in comando_abrirapp):
+                    recognizer = sr.Recognizer()
+                    microphone = sr.Microphone()
                     programs = {
                         'OBS': r"RUTA",
-                        'disc': r"RUTA"
+                        'disc': r"RUTA",
+                        'minecraft': r"RUTA"
                     }
-                    r = sr.Microphone()
-
-                    with sr.Microphone() as source:
-                        engine.say("Que aplicacion quieres abrir")
+                    with microphone as source:
+                        recognizer.adjust_for_ambient_noise(source)
+                        engine.say("Que app quieres abrir?")
+                        audio = recognizer.listen(source)
+                        print("Te escucho")
                         engine.runAndWait()
-                        audio = r.listen(source)
-
 
                     try:
-                        app = r.recognize_google(audio)
-                        if app in programs:
-                            engine.say("Abriendo" +app)
+                        app = recognizer.recognize_google(audio, language="es-ES")
+                        if app == programs:
+                            engine.say(f"Se esta abriendo {app}")
+                            os.startfile(programs[app])
                             engine.runAndWait()
-
-                    except:
-                        print()
+                    except sr.UnknownValueError:
+                        engine.say(f"No se ha encontrado la aplicacion: {app}")
+                        engine.runAndWait()
 
             # -------------------------------------- ENVIAR MENSAJE POR WHATS -------------------------------------- # 
 
